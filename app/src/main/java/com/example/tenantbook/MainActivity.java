@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 if (LoginUser(username,password)) {
                     // Login successful
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, property_activity_2.class);
+                    startActivity(intent);
                 } else {
                     // Login failed
                     Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
