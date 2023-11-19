@@ -61,6 +61,13 @@ public class DbHelper extends SQLiteOpenHelper {
         return db.query(TABLE_PROPERTY, projection, null, null, null, null, null);
     }
 
+    public int deleteButtonFromDatabase(String buttonName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = PROPERTY_NAME + " = ?";
+        String[] selectionArgs = {buttonName};
+        return db.delete(TABLE_PROPERTY, selection, selectionArgs);
+    }
+
     // Method to save a button to the Properties table
     public long saveButtonToDatabase(String buttonName) {
         SQLiteDatabase db = this.getWritableDatabase();

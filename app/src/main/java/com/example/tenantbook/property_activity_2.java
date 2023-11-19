@@ -1,13 +1,13 @@
 package com.example.tenantbook;
 
-import android.content.ContentValues;
+//import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+//import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,6 +55,7 @@ public class property_activity_2 extends AppCompatActivity {
 
         if (id == R.id.delete_in_menu) {
             Toast.makeText(this, "You Clicked Delete Button", Toast.LENGTH_SHORT).show();
+            showDeleteButtonPopup();
         }
 
         return true;
@@ -77,6 +78,37 @@ public class property_activity_2 extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
+    }
+    private void showDeleteButtonPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Button Name to Delete");
+
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String buttonTextToDelete = input.getText().toString();
+            deleteButton(buttonTextToDelete);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setOnDismissListener(dialog -> refreshScreen());
+        builder.show();
+    }
+
+    // Inside property_activity_2.java
+    private void deleteButton(String buttonText) {
+        int rowsDeleted = dbHelper.deleteButtonFromDatabase(buttonText);
+        if (rowsDeleted > 0) {
+            // Button deleted successfully
+            Toast.makeText(this, "Button deleted from database", Toast.LENGTH_SHORT).show();
+            // Remove the button from the UI if needed
+            refreshScreen();
+            // ...
+        } else {
+            // No rows deleted (button not found or deletion failed)
+            Toast.makeText(this, "Error deleting button", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addButton(String buttonText) {
@@ -113,4 +145,11 @@ public class property_activity_2 extends AppCompatActivity {
             Toast.makeText(this, "Error saving button", Toast.LENGTH_SHORT).show();
         }
     }
+    private void refreshScreen() {
+        // Clear the existing buttons from the UI
+        linearLayoutContent.removeAllViews();
+        // Load and display the buttons from the database
+        loadButtons();
+    }
+
 }
